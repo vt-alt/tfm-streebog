@@ -7,32 +7,24 @@
  */
 
 #include <string.h>
-
 #include "streebog-config.h"
-
-#if defined _MSC_VER
-#define ALIGN(x) __declspec(align(x))
-#else
-#define ALIGN(x) __attribute__ ((__aligned__(x)))
-#endif
-
 #include "streebog-ref.h"
 
-ALIGN(16) union uint512_u
+union uint512_u
 {
     unsigned long long QWORD[8];
-} uint512_u;
+} __attribute__((__aligned__(16)));
 
 #include "streebog-const.h"
 #include "streebog-precalc.h"
 
-ALIGN(16) typedef struct GOST34112012Context
+typedef struct GOST34112012Context
 {
-    ALIGN(16) unsigned char buffer[64];
-    ALIGN(16) union uint512_u hash;
-    ALIGN(16) union uint512_u h;
-    ALIGN(16) union uint512_u N;
-    ALIGN(16) union uint512_u Sigma;
+    unsigned char buffer[64];
+    union uint512_u hash;
+    union uint512_u h;
+    union uint512_u N;
+    union uint512_u Sigma;
     size_t bufsize;
     unsigned int digest_size;
 } GOST34112012Context;

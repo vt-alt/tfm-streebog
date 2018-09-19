@@ -142,7 +142,7 @@ stage2(GOST34112012Context *CTX, const unsigned char *data)
 static inline void
 stage3(GOST34112012Context *CTX)
 {
-    ALIGN(16) union uint512_u buf = {{ 0 }};
+    union uint512_u buf = {{ 0 }};
 
 #ifndef __GOST3411_BIG_ENDIAN__
     buf.QWORD[0] = CTX->bufsize << 3;

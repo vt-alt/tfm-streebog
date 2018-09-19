@@ -9,7 +9,7 @@
  */
 
 #ifndef __GOST3411_BIG_ENDIAN__
-ALIGN(16) static const unsigned long long Ax[8][256] = 
+static const unsigned long long Ax[8][256] =
 {
     {
         0xd01f715b5c7ef8e6ULL, 0x16fa240980778325ULL, 0xa8a42e857ee049c8ULL,
@@ -715,9 +715,9 @@ ALIGN(16) static const unsigned long long Ax[8][256] =
         0x9a494faf67707e71ULL, 0xb3dbd1eca9908293ULL, 0x72d14d3493b2e388ULL,
         0xd6a30f258c153427ULL
     }
-};
+} __attribute__((__aligned__(16)));
 #else
-ALIGN(16) static const unsigned long long Ax[8][256] = 
+static const unsigned long long Ax[8][256] =
 {
     {
         0xe6f87e5c5b711fd0ULL, 0x258377800924fa16ULL, 0xc849e07e852ea4a8ULL,
@@ -1423,5 +1423,5 @@ ALIGN(16) static const unsigned long long Ax[8][256] =
         0x717e7067af4f499aULL, 0x938290a9ecd1dbb3ULL, 0x88e3b293344dd172ULL,
         0x2734158c250fa3d6ULL
     }
-};
+} __attribute__((__aligned__(16)));
 #endif
