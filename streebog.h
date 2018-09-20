@@ -3,20 +3,12 @@
  * Copyright (c) 2013, Alexey Degtyarev <alexey@renatasystems.org>. 
  * All rights reserved.
  *
- * $Id$
  */
-
-#include <string.h>
-#include "streebog-config.h"
-#include "streebog-ref.h"
 
 union uint512_u
 {
     unsigned long long QWORD[8];
 } __attribute__((__aligned__(16)));
-
-#include "streebog-const.h"
-#include "streebog-precalc.h"
 
 typedef struct GOST34112012Context
 {
