@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0
+// SPDX-License-Identifier: GPL-2.0 AND BSD-2-Clause
 /*
  * Streebog (GOST 34.11-2012) Hash Function
  *
@@ -10,6 +10,27 @@
  * Software Foundation; either version 2 of the License, or (at your option)
  * any later version.
  *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include <crypto/internal/hash.h>
@@ -17,11 +38,11 @@
 #include <linux/module.h>
 #include <linux/mm.h>
 #include <linux/init.h>
-#include <linux/crypto.h>       
+#include <linux/crypto.h>
 #include <linux/types.h>
-#include <linux/percpu.h>       
-#include <asm/byteorder.h>      
-#include <asm/unaligned.h>      
+#include <linux/percpu.h>
+#include <asm/byteorder.h>
+#include <asm/unaligned.h>
 
 #include "streebog.h"
 
@@ -346,7 +367,7 @@ static const union uint512_u C[12] = {
 #endif
 
 #ifdef __LITTLE_ENDIAN
-static const unsigned long long A[64] = { 
+static const unsigned long long A[64] = {
 	0x8e20faa72ba0b470ULL, 0x47107ddd9b505a38ULL, 0xad08b0e0c3282d1cULL,
 	0xd8045870ef14980eULL, 0x6c022c38f90a4c07ULL, 0x3601161cf205268dULL,
 	0x1b8e0b0e798c13c8ULL, 0x83478b07b2468764ULL, 0xa011d380818e8f40ULL,
@@ -371,7 +392,7 @@ static const unsigned long long A[64] = {
 	0x641c314b2b8ee083ULL
 };
 #else /* !__LITTLE_ENDIAN */
-static const unsigned long long A[64] = { 
+static const unsigned long long A[64] = {
 	0x70b4a02ba7fa208eULL, 0x385a509bdd7d1047ULL, 0x1c2d28c3e0b008adULL,
 	0x0e9814ef705804d8ULL, 0x074c0af9382c026cULL, 0x8d2605f21c160136ULL,
 	0xc8138c790e0b8e1bULL, 0x648746b2078b4783ULL, 0x408f8e8180d311a0ULL,
@@ -398,13 +419,13 @@ static const unsigned long long A[64] = {
 #endif
 
 static const unsigned char Tau[64] = {
-	0,   8,  16,  24,  32,  40,  48,  56, 
-	1,   9,  17,  25,  33,  41,  49,  57, 
-	2,  10,  18,  26,  34,  42,  50,  58, 
-	3,  11,  19,  27,  35,  43,  51,  59, 
-	4,  12,  20,  28,  36,  44,  52,  60, 
-	5,  13,  21,  29,  37,  45,  53,  61, 
-	6,  14,  22,  30,  38,  46,  54,  62, 
+	0,   8,  16,  24,  32,  40,  48,  56,
+	1,   9,  17,  25,  33,  41,  49,  57,
+	2,  10,  18,  26,  34,  42,  50,  58,
+	3,  11,  19,  27,  35,  43,  51,  59,
+	4,  12,  20,  28,  36,  44,  52,  60,
+	5,  13,  21,  29,  37,  45,  53,  61,
+	6,  14,  22,  30,  38,  46,  54,  62,
 	7,  15,  23,  31,  39,  47,  55,  63
 };
 
@@ -2022,6 +2043,88 @@ static int streebog_final(struct shash_desc *desc, u8 *digest)
 	return 0;
 }
 
+struct hash_testvec {
+	const char *algo;
+	const char *plaintext;
+	const char *digest;
+	unsigned short psize;
+};
+
+/* Test vectors from RFC6986 */
+static const struct hash_testvec streebog_tv[] = {
+	{ /* M1 */
+		.algo = "streebog512-generic",
+		.plaintext =
+			"01234567890123456789012345678901"
+			"2345678901234567890123456789012",
+		.psize = 63,
+		.digest =
+			"\x1b\x54\xd0\x1a\x4a\xf5\xb9\xd5"
+			"\xcc\x3d\x86\xd6\x8d\x28\x54\x62"
+			"\xb1\x9a\xbc\x24\x75\x22\x2f\x35"
+			"\xc0\x85\x12\x2b\xe4\xba\x1f\xfa"
+			"\x00\xad\x30\xf8\x76\x7b\x3a\x82"
+			"\x38\x4c\x65\x74\xf0\x24\xc3\x11"
+			"\xe2\xa4\x81\x33\x2b\x08\xef\x7f"
+			"\x41\x79\x78\x91\xc1\x64\x6f\x48"
+	},
+	{
+		.algo = "streebog256-generic",
+		.plaintext =
+			"01234567890123456789012345678901"
+			"2345678901234567890123456789012",
+		.psize = 63,
+		.digest =
+			"\x9d\x15\x1e\xef\xd8\x59\x0b\x89"
+			"\xda\xa6\xba\x6c\xb7\x4a\xf9\x27"
+			"\x5d\xd0\x51\x02\x6b\xb1\x49\xa4"
+			"\x52\xfd\x84\xe5\xe5\x7b\x55\x00"
+	},
+	{ /* M2 */
+		.algo = "streebog512-generic",
+		.plaintext =
+			"\xd1\xe5\x20\xe2\xe5\xf2\xf0\xe8"
+			"\x2c\x20\xd1\xf2\xf0\xe8\xe1\xee"
+			"\xe6\xe8\x20\xe2\xed\xf3\xf6\xe8"
+			"\x2c\x20\xe2\xe5\xfe\xf2\xfa\x20"
+			"\xf1\x20\xec\xee\xf0\xff\x20\xf1"
+			"\xf2\xf0\xe5\xeb\xe0\xec\xe8\x20"
+			"\xed\xe0\x20\xf5\xf0\xe0\xe1\xf0"
+			"\xfb\xff\x20\xef\xeb\xfa\xea\xfb"
+			"\x20\xc8\xe3\xee\xf0\xe5\xe2\xfb",
+		.psize = 72,
+		.digest =
+			"\x1e\x88\xe6\x22\x26\xbf\xca\x6f"
+			"\x99\x94\xf1\xf2\xd5\x15\x69\xe0"
+			"\xda\xf8\x47\x5a\x3b\x0f\xe6\x1a"
+			"\x53\x00\xee\xe4\x6d\x96\x13\x76"
+			"\x03\x5f\xe8\x35\x49\xad\xa2\xb8"
+			"\x62\x0f\xcd\x7c\x49\x6c\xe5\xb3"
+			"\x3f\x0c\xb9\xdd\xdc\x2b\x64\x60"
+			"\x14\x3b\x03\xda\xba\xc9\xfb\x28"
+	},
+	{
+		.algo = "streebog256-generic",
+		.plaintext =
+			"\xd1\xe5\x20\xe2\xe5\xf2\xf0\xe8"
+			"\x2c\x20\xd1\xf2\xf0\xe8\xe1\xee"
+			"\xe6\xe8\x20\xe2\xed\xf3\xf6\xe8"
+			"\x2c\x20\xe2\xe5\xfe\xf2\xfa\x20"
+			"\xf1\x20\xec\xee\xf0\xff\x20\xf1"
+			"\xf2\xf0\xe5\xeb\xe0\xec\xe8\x20"
+			"\xed\xe0\x20\xf5\xf0\xe0\xe1\xf0"
+			"\xfb\xff\x20\xef\xeb\xfa\xea\xfb"
+			"\x20\xc8\xe3\xee\xf0\xe5\xe2\xfb",
+		.psize = 72,
+		.digest =
+			"\x9d\xd2\xfe\x4e\x90\x40\x9e\x5d"
+			"\xa8\x7f\x53\x97\x6d\x74\x05\xb0"
+			"\xc0\xca\xc6\x28\xfc\x66\x9a\x74"
+			"\x1d\x50\x06\x3c\x55\x7e\x8f\x50"
+	},
+	{ 0 },
+};
+
 static struct shash_alg algs[2] = { {
 	.digestsize     =       STREEBOG256_DIGEST_BYTES,
 	.init           =       streebog_init,
@@ -2048,9 +2151,67 @@ static struct shash_alg algs[2] = { {
 	}
 } };
 
+static int alg_test_streebog(void)
+{
+	const struct hash_testvec *t;
+	struct crypto_shash *tfm;
+	int err;
+
+	for (t = streebog_tv; t->algo; t++) {
+		u8 dig[STREEBOG512_DIGEST_BYTES];
+		const char *algo = t->algo;
+		const char *plaintext = t->plaintext;
+		const char *digest = t->digest;
+		unsigned int psize = t->psize;
+		unsigned int digest_size;
+
+		tfm = crypto_alloc_shash(algo, 0, 0);
+		if (IS_ERR(tfm)) {
+			pr_err("failed to load transform\n");
+			err = PTR_ERR(tfm);
+			return err;
+		}
+
+		digest_size = crypto_shash_digestsize(tfm);
+		{
+			SHASH_DESC_ON_STACK(desc, tfm);
+
+			desc->tfm = tfm;
+			desc->flags = 0;
+			err = crypto_shash_digest(desc, plaintext, psize, dig);
+			shash_desc_zero(desc);
+		}
+		crypto_free_shash(tfm);
+		if (err)
+			return err;
+
+		if (memcmp(dig, digest, digest_size)) {
+			pr_err("alg: %s ERROR.\n", algo);
+			return -1;
+		}
+	}
+	return 0;
+}
+
 static int __init streebog_mod_init(void)
 {
-	return crypto_register_shashes(algs, ARRAY_SIZE(algs));
+	int err;
+
+	err = crypto_register_shashes(algs, ARRAY_SIZE(algs));
+	if (err)
+		return err;
+
+	err = alg_test_streebog();
+	if (err) {
+		pr_err("Streebog load error (tests failed)\n");
+		goto unregister;
+	}
+
+	pr_info("Streebog hash functions loaded\n");
+	return 0;
+unregister:
+	crypto_unregister_shashes(algs, ARRAY_SIZE(algs));
+	return err;
 }
 
 static void __exit streebog_mod_fini(void)
