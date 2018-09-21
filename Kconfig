@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+config CRYPTO_STREEBOG
+	tristate "Streebog Hash Functions"
+	select CRYPTO_HASH
+	help
+	  Streebog Hash Functions (GOST R 34.11-2012, RFC 6986) which is one of
+	  the Russian cryptographic standard algorithms (called GOST algorithms).
+	  This setting enables two hash algorithms of 256 and 512 bits.

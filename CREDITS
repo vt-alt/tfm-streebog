@@ -1,0 +1,6 @@
+STREEBOG hash function original implementation comes from streebog.net (GOST R
+34.11-2012: RFC-6986 cryptographic hash function), written by Alexey Degtyarev,
+and licensed under 2-clause BSD. See LICENSE.streebog.
+
+Streebog linux kernel module and all modifications to the above implementation
+is by <vt@altlinux.org>, and licensed under the terms of GPL v2.0.

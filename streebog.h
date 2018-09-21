@@ -5,28 +5,26 @@
  *
  */
 
-union uint512_u
-{
-    unsigned long long QWORD[8];
-} __attribute__((__aligned__(16)));
+#ifndef _STREEBOG_H_
+#define _STREEBOG_H_
 
-typedef struct GOST34112012Context
-{
-    unsigned char buffer[64];
-    union uint512_u hash;
-    union uint512_u h;
-    union uint512_u N;
-    union uint512_u Sigma;
-    size_t bufsize;
-    unsigned int digest_size;
-} GOST34112012Context;
+#include <linux/types.h>
 
-void GOST34112012Init(GOST34112012Context *CTX,
-        const unsigned int digest_size);
+#define STREEBOG256_DIGEST_BYTES	32
+#define STREEBOG512_DIGEST_BYTES	64
+#define STREEBOG_BLOCK_BYTES		64
 
-void GOST34112012Update(GOST34112012Context *CTX, const unsigned char *data,
-        size_t len); 
+union uint512_u {
+	unsigned long long QWORD[8];
+} __aligned(16);
 
-void GOST34112012Final(GOST34112012Context *CTX, unsigned char *digest); 
+struct streebog_state {
+	unsigned char buffer[64] __aligned(16);
+	union uint512_u hash;
+	union uint512_u h;
+	union uint512_u N;
+	union uint512_u Sigma;
+	size_t bufsize;
+};
 
-void GOST34112012Cleanup(GOST34112012Context *CTX);
+#endif /* !_STREEBOG_H_ */
