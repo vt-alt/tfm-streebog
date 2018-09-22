@@ -2029,7 +2029,7 @@ struct hash_testvec {
 	unsigned short psize;
 };
 
-/* Test vectors from RFC6986 */
+/* Test vectors: M1 and M2 are from RFC6986, carry is from gost-engine */
 static const struct hash_testvec streebog_tv[] = {
 	{ /* M1 */
 		.algo = "streebog512-generic",
@@ -2101,43 +2101,99 @@ static const struct hash_testvec streebog_tv[] = {
 			"\xc0\xca\xc6\x28\xfc\x66\x9a\x74"
 			"\x1d\x50\x06\x3c\x55\x7e\x8f\x50"
 	},
+	{ /* carry */
+		.algo = "streebog512-generic",
+		.plaintext =
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\x16\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x16",
+		.psize = 128,
+		.digest =
+			"\x8b\x06\xf4\x1e\x59\x90\x7d\x96"
+			"\x36\xe8\x92\xca\xf5\x94\x2f\xcd"
+			"\xfb\x71\xfa\x31\x16\x9a\x5e\x70"
+			"\xf0\xed\xb8\x73\x66\x4d\xf4\x1c"
+			"\x2c\xce\x6e\x06\xdc\x67\x55\xd1"
+			"\x5a\x61\xcd\xeb\x92\xbd\x60\x7c"
+			"\xc4\xaa\xca\x67\x32\xbf\x35\x68"
+			"\xa2\x3a\x21\x0d\xd5\x20\xfd\x41"
+	},
+	{
+		.algo = "streebog256-generic",
+		.plaintext =
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\xEE\xEE\xEE\xEE\xEE\xEE\xEE\xEE"
+			"\x16\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x11"
+			"\x11\x11\x11\x11\x11\x11\x11\x16",
+		.psize = 128,
+		.digest =
+			"\x81\xbb\x63\x2f\xa3\x1f\xcc\x38"
+			"\xb4\xc3\x79\xa6\x62\xdb\xc5\x8b"
+			"\x9b\xed\x83\xf5\x0d\x3a\x1b\x2c"
+			"\xe7\x27\x1a\xb0\x2d\x25\xba\xbb"
+	},
 	{ 0 },
 };
 
 static struct shash_alg algs[2] = { {
-	.digestsize     =       STREEBOG256_DIGEST_BYTES,
-	.init           =       streebog_init,
-	.update         =       streebog_update,
-	.final          =       streebog_final,
-	.descsize       =       sizeof(struct streebog_state),
-	.base           =       {
-		.cra_name        =      "streebog256",
-		.cra_driver_name =      "streebog256-generic",
-		.cra_blocksize   =      STREEBOG_BLOCK_BYTES,
-		.cra_module      =      THIS_MODULE,
+	.digestsize	=	STREEBOG256_DIGEST_BYTES,
+	.init		=	streebog_init,
+	.update		=	streebog_update,
+	.final		=	streebog_final,
+	.descsize	=	sizeof(struct streebog_state),
+	.base		=	{
+		.cra_name	 =	"streebog256",
+		.cra_driver_name =	"streebog256-generic",
+		.cra_blocksize	 =	STREEBOG_BLOCK_BYTES,
+		.cra_module	 =	THIS_MODULE,
 	},
 }, {
-	.digestsize     =       STREEBOG512_DIGEST_BYTES,
-	.init           =       streebog_init,
-	.update         =       streebog_update,
-	.final          =       streebog_final,
-	.descsize       =       sizeof(struct streebog_state),
-	.base           =       {
-		.cra_name        =      "streebog512",
-		.cra_driver_name =      "streebog512-generic",
-		.cra_blocksize   =      STREEBOG_BLOCK_BYTES,
-		.cra_module      =      THIS_MODULE,
+	.digestsize	=	STREEBOG512_DIGEST_BYTES,
+	.init		=	streebog_init,
+	.update		=	streebog_update,
+	.final		=	streebog_final,
+	.descsize	=	sizeof(struct streebog_state),
+	.base		=	{
+		.cra_name	 =	"streebog512",
+		.cra_driver_name =	"streebog512-generic",
+		.cra_blocksize	 =	STREEBOG_BLOCK_BYTES,
+		.cra_module	 =	THIS_MODULE,
 	}
 } };
 
 static int alg_test_streebog(void)
 {
 	const struct hash_testvec *t;
-	struct crypto_shash *tfm;
 	int err;
 
 	for (t = streebog_tv; t->algo; t++) {
 		u8 dig[STREEBOG512_DIGEST_BYTES];
+		struct crypto_shash *tfm;
 		const char *algo = t->algo;
 		const char *plaintext = t->plaintext;
 		const char *digest = t->digest;
@@ -2208,4 +2264,3 @@ MODULE_ALIAS_CRYPTO("streebog256");
 MODULE_ALIAS_CRYPTO("streebog256-generic");
 MODULE_ALIAS_CRYPTO("streebog512");
 MODULE_ALIAS_CRYPTO("streebog512-generic");
-
