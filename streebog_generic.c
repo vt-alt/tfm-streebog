@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+ OR BSD-2-Clause
 /*
- * Streebog (GOST 34.11-2012) Hash Function
+ * Streebog (GOST R 34.11-2012) Hash Function
  *
  * Copyright (c) 2013, Alexey Degtyarev <alexey@renatasystems.org>.
  * Copyright (C) 2018 <vt@altlinux.org>
