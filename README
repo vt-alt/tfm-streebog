@@ -1,0 +1,5 @@
+This module implements STREEBOG (GOST R 34.11-2012, RFC 6986) hash function
+for purposes of the Linux kernel.
+
+Function aliases are `sb256` for Streebog 256-bit and `sb512` for Streebog
+512-bit.
